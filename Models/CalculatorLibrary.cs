@@ -13,6 +13,6 @@ namespace CalculatorLibrary
             return a - b;
         }
 
-        // Add more arithmetic methods here
+        
     }
 }
