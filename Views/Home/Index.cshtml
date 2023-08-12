@@ -2,45 +2,118 @@
     ViewData["Title"] = "Calculator";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Simple Calculator</h1>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        /* Styles for mobile theme */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-<div class="calculator">
-    <input type="text" id="display" readonly>
-    <button onclick="appendToDisplay('1')">1</button>
-    <button onclick="appendToDisplay('2')">2</button>
-    <button onclick="appendToDisplay('3')">3</button>
-    <button onclick="appendToDisplay('+')">+</button>
-    <br>
-    <button onclick="appendToDisplay('4')">4</button>
-    <button onclick="appendToDisplay('5')">5</button>
-    <button onclick="appendToDisplay('6')">6</button>
-    <button onclick="appendToDisplay('-')">-</button>
-    <br>
-    <button onclick="appendToDisplay('7')">7</button>
-    <button onclick="appendToDisplay('8')">8</button>
-    <button onclick="appendToDisplay('9')">9</button>
-    <button onclick="appendToDisplay('*')">*</button>
-    <br>
-    <button onclick="appendToDisplay('0')">0</button>
-    <button onclick="clearDisplay()">C</button>
-    <button onclick="calculate()">=</button>
+        .title-bar {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
 
-    <button onclick="appendToDisplay('/')">/</button>
-</div>
+        .calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 80%;
+            max-width: 320px;
+            margin-top: 10px;
+        }
 
-<div class="result" id="result">
-    <!-- Result will be displayed here -->
-</div>
+        .display {
+            font-size: 24px;
+            border: none;
+            background-color: #f5f5f5;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            text-align: right;
+        }
 
-<div class="errorMessage" id="errorMessage">
-    <!-- Error messages will be displayed here -->
-</div>
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
 
+        .button {
+            font-size: 18px;
+            padding: 10px;
+            background-color: #d3d3d3;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
+        .operator {
+            background-color: #f39c12;
+            color: white;
+        }
 
-@section Scripts {
+        .clear {
+            background-color: #c0392b;
+            color: white;
+        }
+
+        .result,
+        .errorMessage {
+            margin-top: 10px;
+            text-align: right;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-bar">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+
+    <div class="calculator">
+        <input type="text" id="display" class="display" readonly>
+        <div class="buttons">
+            <button onclick="appendToDisplay('1')" class="button">1</button>
+            <button onclick="appendToDisplay('2')" class="button">2</button>
+            <button onclick="appendToDisplay('3')" class="button">3</button>
+            <button onclick="appendToDisplay('+')" class="button operator">+</button>
+            <button onclick="appendToDisplay('4')" class="button">4</button>
+            <button onclick="appendToDisplay('5')" class="button">5</button>
+            <button onclick="appendToDisplay('6')" class="button">6</button>
+            <button onclick="appendToDisplay('-')" class="button operator">-</button>
+            <button onclick="appendToDisplay('7')" class="button">7</button>
+            <button onclick="appendToDisplay('8')" class="button">8</button>
+            <button onclick="appendToDisplay('9')" class="button">9</button>
+            <button onclick="appendToDisplay('*')" class="button operator">*</button>
+            <button onclick="appendToDisplay('0')" class="button">0</button>
+            <button onclick="clearDisplay()" class="button clear">C</button>
+            <button onclick="calculate()" class="button operator">=</button>
+            <button onclick="appendToDisplay('/')" class="button operator">/</button>
+        </div>
+        <div class="result" id="result">
+            <!-- Result will be displayed here -->
+        </div>
+        <div class="errorMessage" id="errorMessage">
+            <!-- Error messages will be displayed here -->
+        </div>
+    </div>
+
     <script>
         function appendToDisplay(value) {
             document.getElementById('display').value += value;
@@ -49,21 +122,20 @@
         function clearDisplay() {
             document.getElementById('display').value = '';
             document.getElementById('result').innerText = '';
+            document.getElementById('errorMessage').innerText = '';
         }
 
         function calculate() {
             let expression = document.getElementById('display').value;
             if (expression) {
-                // Clear previous error message
                 document.getElementById('errorMessage').innerText = '';
 
-                // Send expression to the server for calculation
                 fetch('/Home/Calculate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ expression: expression })  // Make sure 'expression' matches the property name
+                    body: JSON.stringify({ expression: expression })
                 })
                     .then(response => response.json())
                     .then(data => {
@@ -80,6 +152,6 @@
                     });
             }
         }
-
     </script>
-}
+</body>
+</html>
