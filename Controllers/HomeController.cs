@@ -1,6 +1,9 @@
 ﻿using CalculatorApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+ 
+using library;
+using System.Text.Json;
 
 namespace CalculatorApp.Controllers
 {
@@ -28,5 +31,26 @@ namespace CalculatorApp.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpPost]
+        [HttpPost]
+        public IActionResult Calculate([FromBody] JsonElement data)
+        {
+            try
+            {
+                string expression = data.GetProperty("expression").GetString();
+                Debug.WriteLine(expression);
+                var calculator = new Calculator();
+                int result = calculator.Calculate(expression);
+                // Save the calculation history or perform any necessary actions
+                return Json(new { success = true, result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = "Error evaluating expression: " + ex.Message });
+            }
+        }
+
+
     }
 }

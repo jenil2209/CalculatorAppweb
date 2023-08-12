@@ -26,8 +26,19 @@
     <button onclick="appendToDisplay('0')">0</button>
     <button onclick="clearDisplay()">C</button>
     <button onclick="calculate()">=</button>
+
     <button onclick="appendToDisplay('/')">/</button>
 </div>
+
+<div class="result" id="result">
+    <!-- Result will be displayed here -->
+</div>
+
+<div class="errorMessage" id="errorMessage">
+    <!-- Error messages will be displayed here -->
+</div>
+
+
 
 @section Scripts {
     <script>
@@ -37,15 +48,38 @@
 
         function clearDisplay() {
             document.getElementById('display').value = '';
+            document.getElementById('result').innerText = '';
         }
 
         function calculate() {
-            try {
-                let result = eval(document.getElementById('display').value);
-                document.getElementById('display').value = result;
-            } catch (error) {
-                document.getElementById('display').value = 'Error';
+            let expression = document.getElementById('display').value;
+            if (expression) {
+                // Clear previous error message
+                document.getElementById('errorMessage').innerText = '';
+
+                // Send expression to the server for calculation
+                fetch('/Home/Calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ expression: expression })  // Make sure 'expression' matches the property name
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('result').innerText = 'Result: ' + data.result;
+                        } else {
+                            document.getElementById('result').innerText = 'Error';
+                            document.getElementById('errorMessage').innerText = data.error;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('errorMessage').innerText = 'An error occurred.';
+                    });
             }
         }
+
     </script>
 }
