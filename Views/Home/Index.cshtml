@@ -4,10 +4,11 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>@ViewData["Title"]</title>
     <style>
-        
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -81,6 +82,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="title-bar">
         <h1>@ViewData["Title"]</h1>
@@ -89,29 +91,37 @@
     <div class="calculator">
         <input type="text" id="display" class="display" readonly>
         <div class="buttons">
-            <button onclick="appendToDisplay('1')" class="button">1</button>
-            <button onclick="appendToDisplay('2')" class="button">2</button>
-            <button onclick="appendToDisplay('3')" class="button">3</button>
-            <button onclick="appendToDisplay('+')" class="button operator">+</button>
-            <button onclick="appendToDisplay('4')" class="button">4</button>
-            <button onclick="appendToDisplay('5')" class="button">5</button>
-            <button onclick="appendToDisplay('6')" class="button">6</button>
-            <button onclick="appendToDisplay('-')" class="button operator">-</button>
+            <!-- Row 1 -->
             <button onclick="appendToDisplay('7')" class="button">7</button>
             <button onclick="appendToDisplay('8')" class="button">8</button>
             <button onclick="appendToDisplay('9')" class="button">9</button>
-            <button onclick="appendToDisplay('*')" class="button operator">*</button>
-            <button onclick="appendToDisplay('0')" class="button">0</button>
-            <button onclick="clearDisplay()" class="button clear">C</button>
-            <button onclick="calculate()" class="button operator">=</button>
             <button onclick="appendToDisplay('/')" class="button operator">/</button>
+
+            <!-- Row 2 -->
+            <button onclick="appendToDisplay('4')" class="button">4</button>
+            <button onclick="appendToDisplay('5')" class="button">5</button>
+            <button onclick="appendToDisplay('6')" class="button">6</button>
+            <button onclick="appendToDisplay('*')" class="button operator">×</button>
+
+            <!-- Row 3 -->
+            <button onclick="appendToDisplay('1')" class="button">1</button>
+            <button onclick="appendToDisplay('2')" class="button">2</button>
+            <button onclick="appendToDisplay('3')" class="button">3</button>
+            <button onclick="appendToDisplay('-')" class="button operator">−</button>
+
+            <!-- Row 4 -->
+            <button onclick="appendToDisplay('0')" class="button">0</button>
+            <button onclick="appendToDisplay('.')" class="button">.</button>
+            <button onclick="calculate()" class="button operator">=</button>
+            <button onclick="appendToDisplay('+')" class="button operator">+</button>
+
+            <!-- Row 5 -->
+            <button onclick="backspace()" class="button">←</button>
+            <button onclick="clearDisplay()" class="button clear">C</button>
         </div>
-        <div class="result" id="result">
-           
-        </div>
-        <div class="errorMessage" id="errorMessage">
-           
-        </div>
+        <div class="result" id="result"></div>
+        <div class="errorMessage" id="errorMessage"></div>
+    </div>
     </div>
 
     <script>
@@ -123,6 +133,11 @@
             document.getElementById('display').value = '';
             document.getElementById('result').innerText = '';
             document.getElementById('errorMessage').innerText = '';
+        }
+
+        function backspace() {
+            const display = document.getElementById('display');
+            display.value = display.value.slice(0, -1);
         }
 
         function calculate() {
@@ -152,6 +167,22 @@
                     });
             }
         }
+
+        document.addEventListener('keydown', function (event) {
+            const key = event.key;
+            if ((key >= '0' && key <= '9') || key === '+' || key === '-' || key === '*' || key === '/') {
+                appendToDisplay(key);
+            } else if (key === 'Enter') {
+                calculate();
+            } else if (key === 'Backspace') {
+                backspace();
+            } else if (key === '.') {
+                appendToDisplay('.');
+            } else if (key === 'Escape') {
+                clearDisplay();
+            }
+        });
     </script>
 </body>
+
 </html>
